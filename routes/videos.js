@@ -15,14 +15,12 @@ router.get('/:id', (req, res) => {
   res.send('GET video by id');
 });
 
-// info: https://gist.github.com/homam/8646090
 aws.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
 });
 const s3 = new aws.S3();
 
-// info: https://www.npmjs.com/package/multer-s3
 const upload = multer({
   storage: multerS3({
     s3,
@@ -38,19 +36,17 @@ const upload = multer({
   })
 });
 
-/*
-{
-  fieldname: 'video',
-  originalname: '8054.image_thumb_35C6E986.png',
-  encoding: '7bit',
-  mimetype: 'image/png'
-};
-*/
-
-// info: https://github.com/expressjs/multer
-router.post('/', upload.single('video'), (req, res) => {
-  debug(`${req.file.originalname} has been successfully uploaded.`);
-  return res.redirect('/');
-});
+if (process.env.FEATURE_ENABLE_UPLOAD_VIDEO === 'true') {
+  router.post('/', upload.single('video'), (req, res) => {
+    debug(`${req.file.originalname} has been successfully uploaded.`);
+    return res.redirect('/');
+  });
+} else {
+  router.post('/', (req, res) => {
+    const message = 'FEATURE_ENABLE_UPLOAD_VIDEO has been disabled.';
+    debug(message);
+    throw Error(message);
+  });
+}
 
 module.exports = router;

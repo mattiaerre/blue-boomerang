@@ -23,4 +23,10 @@ yarn start:dev
 
 ## Resources
 
+- https://gist.github.com/homam/8646090
+
+- https://github.com/expressjs/multer
+
+- https://www.npmjs.com/package/multer-s3
+
 - https://peach.blender.org/download/
