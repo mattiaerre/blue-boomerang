@@ -20,3 +20,7 @@ yarn start:dev
 - `GET /videos/:id`
 
 - `POST /videos`
+
+## Resources
+
+- https://peach.blender.org/download/
