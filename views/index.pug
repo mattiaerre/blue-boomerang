@@ -7,14 +7,10 @@ block content
     input(type="file" name="video")
     input(type="submit" value="Upload")
   article.container
-    p
-      video(width="320" height="240" controls)
-        source(src="https://s3-us-west-1.amazonaws.com/blue-boomerang/videos/1494651162461/oceans.mp4" type="video/mp4")
-    p
-      video(width="320" height="240" controls)
-        source(src="https://s3-us-west-1.amazonaws.com/blue-boomerang/videos/1494685432844/mov_bbb.mp4" type="video/mp4")
-    p
-      video(width="320" height="240" controls)
-        source(src="https://s3-us-west-1.amazonaws.com/blue-boomerang/videos/1494701448169/51639423906__9FBBE83E-8D28-4152-A4C2-5427B319336B.MOV" type="video/quicktime")
+    each item in data.Contents
+      p
+        video(width="320" height="240" controls)
+          - const type = item.Key.includes('.mp4') ? 'video/mp4' : 'video/quicktime';
+          source(src=`https://s3-us-west-1.amazonaws.com/blue-boomerang/${item.Key}` type= type)
   footer
     small= title

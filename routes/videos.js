@@ -7,19 +7,29 @@ require('dotenv').config();
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('GET videos');
-});
-
-router.get('/:id', (req, res) => {
-  res.send('GET video by id');
-});
-
 aws.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
 });
 const s3 = new aws.S3();
+
+router.get('/', (req, res) => {
+  const params = {
+    Bucket: process.env.S3_BUCKET
+  };
+  s3.listObjectsV2(params, (error, data) => {
+    if (error) {
+      debug('error:', error);
+      return res.send(error);
+    }
+    debug('data:', data);
+    return res.send(data);
+  });
+});
+
+router.get('/:id', (req, res) => {
+  res.send('GET video by id');
+});
 
 const upload = multer({
   storage: multerS3({
