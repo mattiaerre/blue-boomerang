@@ -1,8 +1,16 @@
 body {
-  padding: 50px;
+  padding: 5em;
+}
+
+body, input {
   font-family: "Lucida Console", Monaco, monospace;
 }
 
 a {
   color: #00B7FF;
+}
+
+.form-video-upload {
+  border: 1px solid gray;
+  padding: 2em;
 }
