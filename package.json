@@ -1,0 +1,40 @@
+{
+  "name": "blue-boomerang",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "start:dev": "DEBUG=blue-boomerang:* nodemon ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "express-favicon-short-circuit": "^1.1.0",
+    "morgan": "~1.8.1",
+    "pug": "^2.0.0-rc.1",
+    "serve-favicon": "~2.4.2"
+  },
+  "description": "blue-boomerang",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattiaerre/blue-boomerang.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mattiaerre/blue-boomerang/issues"
+  },
+  "homepage": "https://github.com/mattiaerre/blue-boomerang#readme",
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^5.0.1",
+    "eslint-plugin-react": "^7.0.0",
+    "nodemon": "^1.11.0"
+  }
+}
