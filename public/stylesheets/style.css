@@ -1,5 +1,5 @@
 body {
-  padding: 5em;
+  padding: 1em;
 }
 
 body, input {
@@ -12,5 +12,15 @@ a {
 
 .form-video-upload {
   border: 1px solid gray;
-  padding: 2em;
+  padding: 1em;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.container p {
+  margin: 1em;
 }
