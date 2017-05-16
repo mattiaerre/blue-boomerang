@@ -25,6 +25,8 @@ yarn start:dev
 
 - https://gist.github.com/homam/8646090
 
+- http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#listObjectsV2-property
+
 - https://github.com/expressjs/multer
 
 - https://www.npmjs.com/package/multer-s3
