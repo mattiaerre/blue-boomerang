@@ -3,6 +3,7 @@ const express = require('express');
 const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
+const moment = require('moment');
 require('dotenv').config();
 
 const router = express.Router();
@@ -24,13 +25,18 @@ router.get('/', (req, res) => {
     }
     const copy = Object.assign({}, data);
     let contents = copy.Contents.map(item =>
-      (Object.assign({}, item, { Url: `${process.env.S3_BASE_URL}/${item.Key}` })));
+      (Object.assign({}, item,
+        {
+          Url: `${process.env.S3_BASE_URL}/${item.Key}`,
+          TimeAgo: moment(item.LastModified).fromNow(true)
+        })));
     if (req.query.rid) {
       const rid = req.query.rid;
       contents = contents.filter(item => item.Key.split('/')[1] === rid);
       copy.KeyCount = contents.length;
     }
     copy.Contents = contents;
+    debug(copy);
     return res.send(copy);
   });
 });
