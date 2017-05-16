@@ -12,5 +12,6 @@ block content
         video(width="320" height="240" controls)
           - const type = item.Key.includes('.mp4') ? 'video/mp4' : 'video/quicktime';
           source(src= item.Url type= type)
+        span= item.TimeAgo
   footer
     small= title
