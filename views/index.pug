@@ -11,6 +11,6 @@ block content
       p
         video(width="320" height="240" controls)
           - const type = item.Key.includes('.mp4') ? 'video/mp4' : 'video/quicktime';
-          source(src=`https://s3-us-west-1.amazonaws.com/blue-boomerang/${item.Key}` type= type)
+          source(src=`https://s3-us-west-1.amazonaws.com/ot-hackathon-restaurant-stories/${item.Key}` type= type)
   footer
     small= title
