@@ -22,8 +22,10 @@ router.get('/', (req, res) => {
       debug('error:', error);
       return res.send(error);
     }
-    debug('data:', data);
-    return res.send(data);
+    const copy = Object.assign({}, data);
+    const rid = req.query.rid || process.env.RID;
+    copy.Contents = copy.Contents.filter(item => item.Key.split('/')[1] === rid);
+    return res.send(copy);
   });
 });
 
@@ -39,7 +41,8 @@ const upload = multer({
       callback(null, file);
     },
     key: (req, file, callback) => {
-      const name = `videos/${Date.now()}/${file.originalname}`;
+      const rid = req.query.rid;
+      const name = `stories/${rid}/${Date.now()}/${file.originalname}`;
       callback(null, name);
     },
     acl: 'public-read'

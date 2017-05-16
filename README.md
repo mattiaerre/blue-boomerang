@@ -15,11 +15,11 @@ yarn start:dev
 
 ### Endpoints
 
-- `GET /videos`
+- `GET /stories`
 
-- `GET /videos/:id`
+- `GET /stories/:id`
 
-- `POST /videos`
+- `POST /stories`
 
 ## Resources
 
