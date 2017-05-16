@@ -23,8 +23,14 @@ router.get('/', (req, res) => {
       return res.send(error);
     }
     const copy = Object.assign({}, data);
-    const rid = req.query.rid || process.env.RID;
-    copy.Contents = copy.Contents.filter(item => item.Key.split('/')[1] === rid);
+    let contents = copy.Contents.map(item =>
+      (Object.assign({}, item, { Url: `${process.env.S3_BASE_URL}/${item.Key}` })));
+    if (req.query.rid) {
+      const rid = req.query.rid;
+      contents = contents.filter(item => item.Key.split('/')[1] === rid);
+      copy.KeyCount = contents.length;
+    }
+    copy.Contents = contents;
     return res.send(copy);
   });
 });
@@ -51,8 +57,9 @@ const upload = multer({
 
 if (process.env.FEATURE_ENABLE_UPLOAD_VIDEO === 'true') {
   router.post('/', upload.single('video'), (req, res) => {
+    const rid = req.query.rid;
     debug(`${req.file.originalname} has been successfully uploaded.`);
-    return res.redirect('/');
+    return res.redirect(`/?rid=${rid}`);
   });
 } else {
   router.post('/', (req, res) => {

@@ -5,7 +5,10 @@ const { name, version } = require('../package');
 const router = express.Router();
 
 router.get('/', (req, res, next) => { // eslint-disable-line no-unused-vars, arrow-body-style
-  const rid = req.query.rid || process.env.RID;
+  const rid = req.query.rid;
+  if (!rid) {
+    return res.redirect(`/?rid=${process.env.RID}`);
+  }
   const url = `${req.protocol}://${req.get('host')}/api/v1/stories?rid=${rid}`;
   return fetch(url)
     .then(response => response.json())
