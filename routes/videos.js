@@ -24,18 +24,25 @@ router.get('/', (req, res) => {
       return res.send(error);
     }
     const copy = Object.assign({}, data);
-    let contents = copy.Contents.map(item =>
-      (Object.assign({}, item,
-        {
-          Url: `${process.env.S3_BASE_URL}/${item.Key}`,
-          TimeAgo: moment(item.LastModified).fromNow(true)
-        })));
+    let contents = copy.Contents
+      .map(item =>
+        (Object.assign({}, item,
+          {
+            Url: `${process.env.S3_BASE_URL}/${item.Key}`,
+            TimeAgo: moment(item.LastModified).fromNow(true)
+          })))
+      .filter((item) => {
+        if (moment(item.LastModified).add(process.env.TTL, 'hours') >= moment()) {
+          return item;
+        }
+        return null;
+      });
     if (req.query.rid) {
       const rid = req.query.rid;
       contents = contents.filter(item => item.Key.split('/')[1] === rid);
-      copy.KeyCount = contents.length;
     }
     copy.Contents = contents;
+    copy.KeyCount = contents.length;
     debug(copy);
     return res.send(copy);
   });
@@ -63,12 +70,12 @@ const upload = multer({
 
 if (process.env.FEATURE_ENABLE_UPLOAD_VIDEO === 'true') {
   router.post('/', upload.single('video'), (req, res) => {
-    const rid = req.query.rid;
     debug(`${req.file.originalname} has been successfully uploaded.`);
+    const rid = req.query.rid;
     return res.redirect(`/?rid=${rid}`);
   });
 } else {
-  router.post('/', (req, res) => {
+  router.post('/', (req, res) => { // eslint-disable-line no-unused-vars
     const message = 'FEATURE_ENABLE_UPLOAD_VIDEO has been disabled.';
     debug(message);
     throw Error(message);
