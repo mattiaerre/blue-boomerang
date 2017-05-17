@@ -29,7 +29,8 @@ router.get('/', (req, res) => {
         (Object.assign({}, item,
           {
             Url: `${process.env.S3_BASE_URL}/${item.Key}`,
-            TimeAgo: moment(item.LastModified).fromNow(true)
+            TimeAgo: moment(item.LastModified).fromNow(true),
+            Rid: item.Key.split('/')[1]
           })))
       .filter((item) => {
         if (moment(item.LastModified).add(process.env.TTL, 'hours') >= moment()) {
