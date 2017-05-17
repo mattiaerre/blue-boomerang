@@ -4,6 +4,7 @@ const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const moment = require('moment');
+const abbreviations = require('./abbreviations');
 require('dotenv').config();
 
 const router = express.Router();
@@ -29,7 +30,7 @@ router.get('/', (req, res) => {
         (Object.assign({}, item,
           {
             Url: `${process.env.S3_BASE_URL}/${item.Key}`,
-            TimeAgo: moment(item.LastModified).fromNow(true),
+            TimeAgo: abbreviations(moment(item.LastModified).fromNow(true)),
             Rid: item.Key.split('/')[1]
           })))
       .filter((item) => {
