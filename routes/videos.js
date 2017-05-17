@@ -4,6 +4,7 @@ const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const moment = require('moment');
+const fetch = require('node-fetch');
 const abbreviations = require('./abbreviations');
 require('dotenv').config();
 
@@ -44,9 +45,39 @@ router.get('/', (req, res) => {
       contents = contents.filter(item => item.Key.split('/')[1] === rid);
     }
     copy.Contents = contents;
-    copy.KeyCount = contents.length;
-    debug(copy);
-    return res.send(copy);
+
+    const rids = contents
+      .map(item => item.Rid)
+      .filter((value, index, self) => (self.indexOf(value) === index));
+    debug(rids);
+
+    let counter = 0;
+    rids.forEach((rid) => {
+      fetch(`https://mobile-api.opentable.com/api/v2/restaurant/${rid}`, {
+        headers: {
+          Authorization: process.env.AUTHORIZATION
+        }
+      })
+        .then(response => response.json())
+        .then((restaurant) => {
+          counter += 1;
+          debug(restaurant.name);
+          contents.map((item) => { // eslint-disable-line
+            if (item.Rid === rid) {
+              /* eslint-disable */
+              item.RestaurantName = restaurant.name;
+              item.NeighborhoodName = restaurant.neighborhoodName;
+              item.PrimaryCuisineName = restaurant.cuisines[0].name;
+              item.ProfilePhotoUrls = restaurant.profilePhoto ? restaurant.profilePhoto.sizes.smallUrl : '';
+              /* eslint-enable */
+            }
+          });
+          if (counter === rids.length) {
+            copy.KeyCount = contents.length;
+            res.send(copy);
+          }
+        });
+    });
   });
 });
 
