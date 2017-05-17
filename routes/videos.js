@@ -16,6 +16,12 @@ aws.config.update({
 });
 const s3 = new aws.S3();
 
+const send = (copy, contents, res) => {
+  copy.Contents = contents; // eslint-disable-line
+  copy.KeyCount = contents.length; // eslint-disable-line
+  return res.send(copy);
+};
+
 router.get('/', (req, res) => {
   const params = {
     Bucket: process.env.S3_BUCKET
@@ -32,7 +38,7 @@ router.get('/', (req, res) => {
           {
             Url: `${process.env.S3_BASE_URL}/${item.Key}`,
             TimeAgo: abbreviations(moment(item.LastModified).fromNow(true)),
-            Rid: item.Key.split('/')[1]
+            Rid: Number.parseInt(item.Key.split('/')[1], 10)
           })))
       .filter((item) => {
         if (moment(item.LastModified).add(process.env.TTL, 'hours') >= moment()) {
@@ -44,12 +50,14 @@ router.get('/', (req, res) => {
       const rid = req.query.rid;
       contents = contents.filter(item => item.Key.split('/')[1] === rid);
     }
-    copy.Contents = contents;
+
+    if (contents.length === 0) {
+      return send(copy, contents, res);
+    }
 
     const rids = contents
       .map(item => item.Rid)
       .filter((value, index, self) => (self.indexOf(value) === index));
-    debug(rids);
 
     let counter = 0;
     rids.forEach((rid) => {
@@ -59,9 +67,8 @@ router.get('/', (req, res) => {
         }
       })
         .then(response => response.json())
-        .then((restaurant) => {
+        .then((restaurant) => { // eslint-disable-line
           counter += 1;
-          debug(restaurant.name);
           contents.map((item) => { // eslint-disable-line
             if (item.Rid === rid) {
               /* eslint-disable */
@@ -69,12 +76,16 @@ router.get('/', (req, res) => {
               item.NeighborhoodName = restaurant.neighborhoodName;
               item.PrimaryCuisineName = restaurant.cuisines[0].name;
               item.ProfilePhotoUrl = restaurant.profilePhoto ? restaurant.profilePhoto.sizes.smallUrl : '';
+              item.MetroId = Number.parseInt(restaurant.metroId, 10);
               /* eslint-enable */
             }
           });
           if (counter === rids.length) {
-            copy.KeyCount = contents.length;
-            res.send(copy);
+            const metroid = Number.parseInt(req.query.metroid, 10);
+            if (metroid) {
+              contents = contents.filter(item => item.MetroId === metroid);
+            }
+            return send(copy, contents, res);
           }
         });
     });
