@@ -65,14 +65,25 @@ const upload = multer({
       callback(null, name);
     },
     acl: 'public-read'
-  })
+  }),
+  fileFilter: (req, file, cb) => {
+    const rid = req.query.rid;
+    debug(
+      'rid:', rid,
+      'Number.parseInt(rid, 10):', Number.parseInt(rid, 10),
+      'Number.isInteger(Number.parseInt(rid, 10)):', Number.isInteger(Number.parseInt(rid, 10)));
+    cb(null, Number.isInteger(Number.parseInt(rid, 10)));
+  }
 });
 
 if (process.env.FEATURE_ENABLE_UPLOAD_VIDEO === 'true') {
   router.post('/', upload.single('video'), (req, res) => {
-    debug(`${req.file.originalname} has been successfully uploaded.`);
-    const rid = req.query.rid;
-    return res.redirect(`/?rid=${rid}`);
+    if (req.file) {
+      debug(`${req.file.originalname} has been successfully uploaded.`);
+      const rid = req.query.rid;
+      return res.redirect(`/?rid=${rid}`);
+    }
+    return res.sendStatus(400);
   });
 } else {
   router.post('/', (req, res) => { // eslint-disable-line no-unused-vars
