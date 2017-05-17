@@ -68,7 +68,7 @@ router.get('/', (req, res) => {
               item.RestaurantName = restaurant.name;
               item.NeighborhoodName = restaurant.neighborhoodName;
               item.PrimaryCuisineName = restaurant.cuisines[0].name;
-              item.ProfilePhotoUrls = restaurant.profilePhoto ? restaurant.profilePhoto.sizes.smallUrl : '';
+              item.ProfilePhotoUrl = restaurant.profilePhoto ? restaurant.profilePhoto.sizes.smallUrl : '';
               /* eslint-enable */
             }
           });
