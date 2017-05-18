@@ -30,7 +30,10 @@
     "url": "git+https://github.com/mattiaerre/blue-boomerang.git"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Mattia Richetto",
+    "email": "mattia.richetto@gmail.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mattiaerre/blue-boomerang/issues"

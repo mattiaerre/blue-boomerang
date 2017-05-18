@@ -1,6 +1,6 @@
 # blue-boomerang
 
-blue-boomerang
+Todo: move it [here](https://github.com/opentable/hackathon-restaurant-stories)
 
 ```
 yarn
