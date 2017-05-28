@@ -6,7 +6,7 @@ const abbreviations = input => (
     .replace('minutes', 'mins')
     .replace('minute', 'min')
     .replace('an', '1')
-    .replace('a', '1')
+    .replace('a ', '1 ')
 );
 
 module.exports = abbreviations;

@@ -21,6 +21,10 @@ describe('abbreviations', () => {
     {
       input: '2 minutes',
       output: '2 mins'
+    },
+    {
+      input: '10 days',
+      output: '10 days'
     }
   ];
 
